@@ -1,12 +1,8 @@
 #include "mensager.h"
 
-int send(int origem,int destino, int status_d){
-Processo processo;
-Processo processo2;
-processo.id = origem;
-processo2.id = destino;
-processo2.status = status_d;
-    if (processo2.status == 0)
+int send(Processo p1, Processo p2){
+
+    if (p2.status == 0)
         return 1;
     else
         return 0;
@@ -22,14 +18,8 @@ int receive(Processo *p, Processo dest, int quant){
 
 }
 
-int sendrec(int origem,int destino, int status_d){
-Processo processo;
-Processo processo2;
-processo.id = origem;
-processo2.id = destino; 
-processo2.status = status_d; 
-    printf("Enviando mensagem ao processo de destino\n");
-    if(processo2.status == 0)
+int sendrec(Processo p1, Processo p2){
+    if(p2.status == 0)
         return 1;
     else
         return 0;
@@ -46,12 +36,22 @@ int lerInteiro(){
     return atoi(num);
 }
 
-int busca (int *prt, int *quant, int elemento){
+int busca (Processo *prt, int *quant, int elemento){
     int i;
     Processo *PCO = prt;
     for(i=0; i<=*quant; i++){
-          if(PCO[i].id == elemento)
-          return i;
-          }
-          return -1;
-    }    
+        if(PCO[i].id == elemento)
+            return i;
+    }
+            return -1;
+}
+
+int busca_exec (Processo *prt, int *quant, int elemento){
+    int i;
+    Processo *PCO = prt;
+    for(i=0; i<=*quant; i++){
+        if(PCO[i].status == elemento)
+            return i;
+    }
+            return -1;
+}      

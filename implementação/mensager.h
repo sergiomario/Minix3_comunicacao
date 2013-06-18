@@ -19,14 +19,18 @@ typedef struct Processo
 
 
 
-int send(int ,int, int);
+int send(Processo , Processo );
 
 int receive(Processo *, Processo , int);
 
-int sendrec(int ,int, int);
+int sendrec(Processo , Processo );
 
 int notify(int ,int );
 
 int lerInteiro();
+
+int busca (Processo *, int *, int );
+
+int busca_exec (Processo *, int *, int );
 
 #endif

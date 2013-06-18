@@ -3,129 +3,157 @@
 void main(int argc, char const *argv[])
 {
     Processo processo[10];
-    int i = 0, num, verificador,j,auxiliar,quantElementos;
+    int i = 0, num, verificador,j,auxiliar,quantElementos,a=1;
 
     do{
         printf("\n\nMenu\n");
         printf("0 - Criar um processo\n");
-        printf("1 - Send\n");
-        printf("2 - Receive\n");
-        printf("3 - Sendrec\n");
-        printf("4 - Notify\n");
-        printf("5 - Listar processos\n");
-        printf("10 - Sair\n");
+        printf("1 - Executar a primitiva SEND\n");
+        printf("2 - Executar a primitiva RECEIVE\n");
+        printf("3 - Executar a primitiva SENDREC\n");
+        printf("4 - Executar a primitiva NOTIFY\n");
+        printf("5 - Listar todos os processos existentes.\n");
+        printf("10 - Sair\n\n");
 
 
         num = lerInteiro();
+        quantElementos = i - 1;
         switch(num){
 
-          case 0:
-          printf("Digite o id do processo\n");
-          verificador = lerInteiro();
-          for (j = 0; j < i; j++)
-          {
+        case 0:
+            printf("Digite o Pid do novo processo\n");
+            verificador = lerInteiro();
+            for (j = 0; j < i; j++)
+            {
             if (processo[j].id==verificador)
                 auxiliar = 1;
-        }
+            }
 
-        if (auxiliar!=1)
-        {
-            processo[i].id = verificador;
-            processo[i].status = rand() %2;
-            printf("\nO processo %d criado\n\n",processo[i].id);
-            i++;
-        }
-        else
-            printf("chave atribuida a outro processo!!\n\n");
+            if (auxiliar!=1)
+            {
+                processo[i].id = verificador;
 
-        break;
+                auxiliar = busca_exec(processo, &quantElementos, a);
+                if (auxiliar == -1)
+                    processo[i].status = rand() %2;
+                else
+                    processo[i].status = rand() %1;
+                
+                printf("\nO processo %d foi criado com sucesso!\n\n",processo[i].id);
+                i++;
+            }
+            else
+                printf("\nA chave já foi atribuida a outro processo!!\n\n");
+
+            break;
 
         case 1:
-            quantElementos = i - 1;
-            printf("Informe o id do remetente.\n");            
+            printf("Informe o Pid do remetente.\n");            
             auxiliar = lerInteiro();
             auxiliar = busca(processo, &quantElementos, auxiliar);
-            
-            if (auxiliar == -1)
-                printf("Processo nao existe.\n");
-
-        else
-        {
-            printf("Informe o id do destinatário.\n");            
-            j = lerInteiro();
-            j = busca(processo, &quantElementos, j);
 
             if (auxiliar == -1)
-            printf("Processo nao existe.\n");
+                printf("Processo nao existe!\n");
 
             else
             {
-                verificador = send(processo[auxiliar].id,processo[j].id,processo[j].status);
-                if (verificador == 1)
-                    printf("Mensagem enviada.\n\n");
-                else{
-                    processo[j].entrada_ms = processo[auxiliar].id;
-                    printf("Mensagem em espera para envio.\n\n");
-                    processo[auxiliar].status = BLOQUEADO;
+                printf("Informe o Pid do destinatário.\n");            
+                j = lerInteiro();
+                j = busca(processo, &quantElementos, j);
+
+                if (auxiliar == -1)
+                    printf("Processo nao existe.\n");
+
+                else
+                {
+                    verificador = send(processo[auxiliar],processo[j]);
+                    if (verificador == 1)
+                        printf("\nMensagem enviada.\n\n");
+                    else{
+                        processo[j].entrada_ms = processo[auxiliar].id;
+                        printf("\nMensagem em espera para envio.\n\n");
+                        processo[auxiliar].status = BLOQUEADO;
                     }
+                }
             }
-        }
         
-     break;
+        break;
 
-     case 2:
-     quantElementos = i - 1;
-     printf("Informe o id do destinatário.\n");            
-     auxiliar = lerInteiro();
-     auxiliar = busca(processo, &quantElementos, auxiliar);
+        case 2:
+            quantElementos = i - 1;
+            printf("\nInforme o Pid do destinatário.\n");            
+            auxiliar = lerInteiro();
+            auxiliar = busca(processo, &quantElementos, auxiliar);
 
-     if (auxiliar == -1)
-        printf("Processo nao existe.\n");
-    else{
-        verificador = receive(processo,processo[auxiliar],quantElementos);
-            if (verificador == 1){
-                printf("Mensagem recebida.\n\n");
-                num = busca(processo, &quantElementos, processo[auxiliar].entrada_ms);
-                processo[auxiliar].entrada_ms = -2;
-                processo[num].status = PRONTO;
-            }
+            if (auxiliar == -1)
+                printf("\nProcesso nao existe.\n");
             else{
-                printf("Não há mensagens para receber.\n\n");
+                verificador = receive(processo,processo[auxiliar],quantElementos);
+                if (verificador == 1){
+                    printf("Mensagem recebida.\n\n");
+                    j = busca(processo, &quantElementos, processo[auxiliar].entrada_ms);
+                    processo[auxiliar].entrada_ms = -2;
+                    processo[j].status = PRONTO;
+                }
+                else{
+                    printf("Não há mensagens para receber.\n\n");
+                }
             }
-    }
 
-    break;
+        break;
 
-            // case 3:
-            // verificador = sendrec(processo.id,processo2.id,processo2.status);
-            // if(verificador == 1)
-            //  printf("Resposta recebida pelo destinatário.\n\n");
-            // else{
-            //  printf("Aguardando destinatário desbloquear...\n\n");
-            //  processo2.status = 0;
-            //  verificador = sendrec(processo.id,processo2.id,processo2.status);
-            //  if(verificador == 1)
-            //  printf("Resposta recebida pelo destinatário.\n\n");
-            // }
-            // break;
+        case 3:
+            quantElementos = i - 1;
+            printf("Informe o Pid do remetente.\n");            
+            auxiliar = lerInteiro();
+            auxiliar = busca(processo, &quantElementos, auxiliar);
 
-            // case 4:
-            // printf("processo %d informa ao processo %d que está ocorrendo uma interrupção de hardware.\n\n",processo2.id,processo.id);
-            // break;
+            if (auxiliar == -1)
+                printf("Processo nao existe!\n");
 
-     case 5:
-     for (j = 0; j < i; j++)
-        printf("Processo %d status %d.\n", processo[j].id, processo[j].status);
-    break;
+            else
+            {
+                printf("Informe o Pid do destinatário.\n");            
+                j = lerInteiro();
+                j = busca(processo, &quantElementos, j);
 
-    case 10:
-    printf("Adeus.\n\n\n");
-    break;
+                if (auxiliar == -1)
+                    printf("Processo nao existe.\n");
 
-    default:
-    printf("Opção inválida\n\n");
-    break;
+                else{
+                    printf("Enviando mensagem ao processo de destino\n");
+                    verificador = sendrec(processo[auxiliar],processo[j]);
+                    if(verificador == 1)
+                        printf("Resposta recebida pelo destinatário.\n\n");
+                    else{
+                        printf("Aguardando destinatário desbloquear...\n\n");
+                        processo[j].status = 0;
+                        verificador = sendrec(processo[auxiliar],processo[j]);
+                        if(verificador == 1)
+                        printf("Resposta recebida pelo destinatário.\n\n");
+                    }
+                }
+            }
 
-} 
-}while(num != 10);
+            break;
+
+        //case 4:
+            //printf("processo %d informa processo %d que está ocorrendo uma interrupção de hardware.\n\n");
+        //break;
+
+        case 5:
+            for (j = 0; j < i; j++)
+                printf("\nProcesso: %d status: %d.\n", processo[j].id, processo[j].status);
+        break;
+
+        case 10:
+            printf("\n\nADEUS.\n\n\n");
+        break;
+
+        default:
+            printf("\nOpção inválida\n\n");
+        break;
+
+    } 
+} while(num != 10);
 }

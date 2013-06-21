@@ -2,7 +2,7 @@
 
 int send(Processo p1, Processo p2){
 
-    if (p2.status == 0)
+    if (p2.status == 0 && p1.status != -1)
         return 1;
     else
         return 0;
@@ -19,7 +19,7 @@ int receive(Processo *p, Processo dest, int quant){
 }
 
 int sendrec(Processo p1, Processo p2){
-    if(p2.status == 0)
+    if(p2.status == 0 && p1.status != -1)
         return 1;
     else
         return 0;

@@ -4,6 +4,7 @@ void main(int argc, char const *argv[])
 {
     Processo processo[10];
     int i = 0, num, verificador,j,auxiliar,quantElementos,a=1;
+    char mensagem[30];
 
     do{
         printf("\n\nMenu\n");
@@ -66,13 +67,18 @@ void main(int argc, char const *argv[])
 
                 else
                 {
+                    printf("DIGITE A MENSAGEM: ");
+                    gets(mensagem);
                     verificador = send(processo[auxiliar],processo[j]);
-                    if (verificador == 1)
+                    if (verificador == 1){
                         printf("\nMensagem enviada.\n\n");
+                        printf("%s\n", mensagem);
+                    }
+                        
                     else{
                         processo[j].entrada_ms = processo[auxiliar].id;
                         printf("\nMensagem em espera para envio.\n\n");
-                        processo[auxiliar].status = BLOQUEADO;
+                        processo[auxiliar].status = -1;
                     }
                 }
             }
@@ -91,9 +97,10 @@ void main(int argc, char const *argv[])
                 verificador = receive(processo,processo[auxiliar],quantElementos);
                 if (verificador == 1){
                     printf("Mensagem recebida.\n\n");
+                    printf("%s\n", mensagem);
                     j = busca(processo, &quantElementos, processo[auxiliar].entrada_ms);
                     processo[auxiliar].entrada_ms = -2;
-                    processo[j].status = PRONTO;
+                    processo[j].status = 0;
                 }
                 else{
                     printf("Não há mensagens para receber.\n\n");
@@ -121,10 +128,15 @@ void main(int argc, char const *argv[])
                     printf("Processo nao existe.\n");
 
                 else{
+                    printf("DIGITE A MENSAGEM: ");
+                    gets(mensagem);
                     printf("Enviando mensagem ao processo de destino\n");
                     verificador = sendrec(processo[auxiliar],processo[j]);
-                    if(verificador == 1)
+                    if(verificador == 1){
                         printf("Resposta recebida pelo destinatário.\n\n");
+                        printf("%s\n", mensagem);
+                    }
+                        
                     else{
                         printf("Aguardando destinatário desbloquear...\n\n");
                         processo[j].status = 0;

@@ -5,10 +5,6 @@
 
 #define MENSAGER_H
 
-#define EXEC 1;
-#define PRONTO 0;
-#define BLOQUEADO -1;
-
 typedef struct Processo
 {
 	int id;

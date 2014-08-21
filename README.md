@@ -1,6 +1,6 @@
 Minix3_comunicacao
 ==================
+Communication interprocess on MINIX 3
 
-Comunicação entre processos no MINIX3
-
-Este trabalho acadêmico se refere à implementação dos principais paradigmas de trocas de mensagens utilizadas pelo MINIX na comunicação entre os processos.
+This academic work relates to the implementation of the main paradigms of message exchanges
+used by MINIX communication between processes.
